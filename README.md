@@ -1,3 +1,4 @@
+>>>>>>> branch
 # Clueso Clone
 
 ## Features
@@ -12,3 +13,7 @@
 ## Tech Stack
 - HTML, CSS, JavaScript
 - MediaRecorder API
+=======
+# clueso-clone
+"internship clueso clone Assignment
+>>>>>>> 006e0b8ad474800a9ac9efda4bb08676f6574814
