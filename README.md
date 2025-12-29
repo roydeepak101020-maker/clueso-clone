@@ -1,4 +1,7 @@
->>>>>>> branch
+<<<<<<< branch
+(current change)
+=======
+
 # Clueso Clone
 
 ## Features
