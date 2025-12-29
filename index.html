@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clueso Clone</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    button { padding: 10px 15px; margin-right: 10px; cursor: pointer; }
+    video { display: block; margin-top: 15px; width: 100%; max-width: 600px; background: black; }
+    input { padding: 8px; width: 300px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🎥 Clueso Clone (Basic)</h1>
+
+  <div class="controls">
+    <button id="startBtn">Start Recording</button>
+    <button id="stopBtn" disabled>Stop Recording</button>
+  </div>
+
+  <video id="preview" controls></video>
+
+  <h2>📝 Steps</h2>
+  <input type="text" id="stepInput" placeholder="Enter a step...">
+  <button id="addStep">Add Step</button>
+
+  <ul id="stepsList"></ul>
+
+  <script>
+    // Recording
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const preview = document.getElementById("preview");
+    let mediaRecorder;
+    let recordedChunks = [];
+
+    startBtn.onclick = async () => {
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      recordedChunks = [];
+      mediaRecorder.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = () => { preview.src = URL.createObjectURL(new Blob(recordedChunks,{type:"video/webm"})); };
+      mediaRecorder.start();
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    };
+
+    stopBtn.onclick = () => { mediaRecorder.stop(); startBtn.disabled=false; stopBtn.disabled=true; };
+
+    // Steps
+    const addStepBtn = document.getElementById("addStep");
+    const stepInput = document.getElementById("stepInput");
+    const stepsList = document.getElementById("stepsList");
+
+    addStepBtn.addEventListener("click", () => {
+      const text = stepInput.value.trim();
+      if(text === "") return;
+
+      const li = document.createElement("li"); // create list item
+      li.textContent = text; // set text
+      stepsList.appendChild(li); // append to list
+      stepInput.value = ""; // clear input
+      stepInput.focus(); // focus back on input
+    });
+  </script>
+</body>
+</html>

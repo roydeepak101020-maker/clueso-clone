@@ -1,0 +1,32 @@
+// Recording
+const startBtn = document.getElementById("startBtn");
+const stopBtn = document.getElementById("stopBtn");
+const preview = document.getElementById("preview");
+let mediaRecorder;
+let recordedChunks = [];
+
+startBtn.onclick = async () => {
+  const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+  mediaRecorder = new MediaRecorder(stream);
+  recordedChunks = [];
+  mediaRecorder.ondataavailable = e => { if(e.data.size > 0) recordedChunks.push(e.data); };
+  mediaRecorder.onstop = () => { preview.src = URL.createObjectURL(new Blob(recordedChunks, { type: "video/webm" })); };
+  mediaRecorder.start();
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+};
+
+stopBtn.onclick = () => { mediaRecorder.stop(); startBtn.disabled = false; stopBtn.disabled = true; };
+
+// Steps
+const addStepBtn = document.getElementById("addStep");
+const stepInput = document.getElementById("stepInput");
+const stepsList = document.getElementById("stepsList");
+
+addStepBtn.onclick = () => {
+  if(stepInput.value.trim() === "") return;
+  const li = document.createElement("li");
+  li.textContent = stepInput.value;
+  stepsList.appendChild(li);
+  stepInput.value = "";
+};
